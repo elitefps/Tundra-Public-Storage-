@@ -273,7 +273,14 @@ end)
 -- Freeze Toggle
 targetTab:Toggle('Freeze', function(freeze)
     if freeze then
-        
+        -- Wait for the player's character to load
+local character = player.Character or player.CharacterAdded:Wait()
+
+-- Wait for the HumanoidRootPart to be present in the character
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+-- Anchor the HumanoidRootPart
+humanoidRootPart.Anchored = true
     else
         
     end
@@ -284,12 +291,3 @@ miscTab:Toggle('Auto Clicker (2ms)', function(autoclicker)
    
 
 end)
-
-
-
--- Save Instance if KRNL_LOADED
-if KRNL_LOADED then
-    Krnl.SaveInstance()
-end
-
-
