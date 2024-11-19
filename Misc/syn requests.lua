@@ -887,7 +887,7 @@ end
 funcs.syn.protect_gui(DrawingDict)
 
 -- Saveinstance (credit to the fuck who made this)
-local dlldecompile = loadstring(game:HttpGet("https://raw.githubusercontent.com/roluau/DLLDecompile/main/dlldecompile.luau", true), "dlldecompile")()
+--[[local dlldecompile = loadstring(game:HttpGet("https://raw.githubusercontent.com/roluau/DLLDecompile/main/dlldecompile.luau", true), "dlldecompile")()
 local config = {
     mode = "custom",  -- Change this to invalid mode like "invalid" if you only want ExtraInstances. "optimized" mode is NOT supported with @Object option. Default: "custom"
     ExtraInstances = {  -- List of instances to include
@@ -915,3 +915,4 @@ local config = {
 }
 dlldecompile(config)
 
+--]]
