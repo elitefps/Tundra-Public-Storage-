@@ -1,0 +1,2 @@
+loadstring(game:HttpGet("https://raw.githubusercontent.com/elitefps/Tundra-Public-Storage-/refs/heads/main/utilities/math.lua",true))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/elitefps/Tundra-Public-Storage-/refs/heads/main/Misc/syn%20requests.lua",true))()
