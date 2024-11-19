@@ -1,0 +1,19 @@
+
+local Sense = loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Sirius/request/library/sense/source.lua'))()
+
+
+Sense.teamSettings.enemy.enabled = false
+Sense.teamSettings.enemy.box = false
+Sense.teamSettings.enemy.box3d = false
+Sense.teamSettings.enemy.healthBar = false
+Sense.teamSettings.enemy.chams = false
+Sense.teamSettings.enemy.boxFill = false
+Sense.teamSettings.enemy.boxFillColor = Color3.new(150,150,150)
+Sense.teamSettings.enemy.boxColor[1] = Color3.new(255,255,255)
+Sense.teamSettings.enemy.name = false
+Sense.teamSettings.enemy.weapon = false
+Sense.teamSettings.enemy.distance = false
+Sense.teamSettings.enemy.offScreenArrow = false
+
+Sense.Load()
+--Sense.Unload()
