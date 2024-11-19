@@ -689,7 +689,7 @@ end
 
 -- game specific functions
 function EspInterface.getWeapon(player)
-	return "[ Unarmed ]";
+	return "[ Unarmed ]"; 
 end
 
 function EspInterface.isFriendly(player)
