@@ -233,7 +233,178 @@ function EspObject:Update()
 	end
 end
 
+-- // update
+function EspObject:Render()
+	-- Cache frequently used variables
+	local onScreen = self.onScreen
+	local enabled = self.enabled
+	local interface, options = self.interface, self.options
+	local visible, hidden, box3d = self.drawings.visible, self.drawings.hidden, self.drawings.box3d
+	local corners = self.corners
 
+	-- Quick return if ESP is disabled or off-screen
+	if not enabled or not onScreen then
+		for _, drawing in pairs(visible) do drawing.Visible = false end
+		for _, drawing in pairs(hidden) do drawing.Visible = false end
+		return
+	end
+
+	-- Box settings
+	if options.box then
+		local box, boxOutline = visible.box, visible.boxOutline
+		local boxPos = corners.topLeft
+		local boxSize = corners.bottomRight - corners.topLeft
+
+		box.Visible = true
+		box.Position = boxPos
+		box.Size = boxSize
+		box.Color = options.boxColor[1]
+		box.Transparency = options.boxColor[2]
+
+		if options.boxOutline then
+			boxOutline.Visible = true
+			boxOutline.Position = boxPos
+			boxOutline.Size = boxSize
+			boxOutline.Color = options.boxOutlineColor[1]
+			boxOutline.Transparency = options.boxOutlineColor[2]
+		else
+			boxOutline.Visible = false
+		end
+	else
+		visible.box.Visible = false
+		visible.boxOutline.Visible = false
+	end
+
+	-- Box Fill
+	if options.boxFill then
+		local boxFill = visible.boxFill
+		boxFill.Visible = true
+		boxFill.Position = corners.topLeft
+		boxFill.Size = corners.bottomRight - corners.topLeft
+		boxFill.Color = options.boxFillColor[1]
+		boxFill.Transparency = options.boxFillColor[2]
+	else
+		visible.boxFill.Visible = false
+	end
+
+	-- Health Bar
+	if options.healthBar then
+		local barFrom = corners.topLeft - HEALTH_BAR_OFFSET
+		local barTo = corners.bottomLeft - HEALTH_BAR_OFFSET
+		local healthRatio = math.clamp(self.health / self.maxHealth, 0, 1)
+
+		local healthBar, healthBarOutline = visible.healthBar, visible.healthBarOutline
+		healthBar.Visible = true
+		healthBar.From = lerp2(barTo, barFrom, healthRatio)
+		healthBar.To = barTo
+		healthBar.Color = lerpColor(options.dyingColor, options.healthyColor, healthRatio)
+
+		if options.healthBarOutline then
+			healthBarOutline.Visible = true
+			healthBarOutline.From = barFrom - HEALTH_BAR_OUTLINE_OFFSET
+			healthBarOutline.To = barTo + HEALTH_BAR_OUTLINE_OFFSET
+			healthBarOutline.Color = options.healthBarOutlineColor[1]
+			healthBarOutline.Transparency = options.healthBarOutlineColor[2]
+		else
+			healthBarOutline.Visible = false
+		end
+	else
+		visible.healthBar.Visible = false
+		visible.healthBarOutline.Visible = false
+	end
+
+	-- Health Text
+	if options.healthText then
+		local healthText = visible.healthText
+		local barFrom = corners.topLeft - HEALTH_BAR_OFFSET
+		local barTo = corners.bottomLeft - HEALTH_BAR_OFFSET
+		local healthRatio = math.clamp(self.health / self.maxHealth, 0, 1)
+
+		healthText.Visible = true
+		healthText.Text = string.format("%dhp", round(self.health))
+		healthText.Size = interface.sharedSettings.textSize
+		healthText.Font = interface.sharedSettings.textFont
+		healthText.Color = options.healthTextColor[1]
+		healthText.Transparency = options.healthTextColor[2]
+		healthText.Outline = options.healthTextOutline
+		healthText.OutlineColor = options.healthTextOutlineColor
+		healthText.Position = lerp2(barTo, barFrom, healthRatio) - healthText.TextBounds * 0.5 - HEALTH_TEXT_OFFSET
+	else
+		visible.healthText.Visible = false
+	end
+
+	-- Name, Distance, Weapon, and Tracer
+	self:UpdateText("name", corners.topLeft + corners.topRight, options.name, NAME_OFFSET)
+	self:UpdateText("distance", corners.bottomLeft + corners.bottomRight, options.distance, DISTANCE_OFFSET)
+	self:UpdateText("weapon", corners.bottomLeft + corners.bottomRight, options.weapon, DISTANCE_OFFSET)
+
+	-- Off-Screen Arrow
+	if options.offScreenArrow then
+		self:UpdateOffScreenArrow(hidden.arrow, hidden.arrowOutline, options)
+	else
+		hidden.arrow.Visible = false
+		hidden.arrowOutline.Visible = false
+	end
+
+	-- 3D Box
+	self:Update3DBox(box3d, enabled and options.box3d, corners, options)
+end
+
+function EspObject:UpdateText(drawingName, basePosition, option, offset)
+	local visible = self.drawings.visible[drawingName]
+	if option then
+		visible.Visible = true
+		visible.Text = drawingName == "distance" and string.format("%d studs", round(self.distance)) or tostring(self[drawingName])
+		visible.Size = self.interface.sharedSettings.textSize
+		visible.Font = self.interface.sharedSettings.textFont
+		visible.Color = self.options[drawingName .. "Color"][1]
+		visible.Transparency = self.options[drawingName .. "Color"][2]
+		visible.Position = basePosition * 0.5 + offset
+	else
+		visible.Visible = false
+	end
+end
+
+function EspObject:UpdateOffScreenArrow(arrow, arrowOutline, options)
+	arrow.Visible = true
+	arrowOutline.Visible = options.offScreenArrowOutline
+
+	local viewportSize = self.interface.viewportSize
+	local position = viewportSize * 0.5 + self.direction * options.offScreenArrowRadius
+	arrow.PointA = min2(max2(position, Vector2.one * 25), viewportSize - Vector2.one * 25)
+	arrow.PointB = arrow.PointA - rotateVector(self.direction, 0.45) * options.offScreenArrowSize
+	arrow.PointC = arrow.PointA - rotateVector(self.direction, -0.45) * options.offScreenArrowSize
+
+	if options.offScreenArrowOutline then
+		arrowOutline.PointA = arrow.PointA
+		arrowOutline.PointB = arrow.PointB
+		arrowOutline.PointC = arrow.PointC
+	end
+end
+
+function EspObject:Update3DBox(box3d, enabled, corners, options)
+	if enabled then
+		for i = 1, #box3d do
+			local face = box3d[i]
+			for _, line in ipairs(face) do
+				line.Visible = true
+				line.Color = options.box3dColor[1]
+				line.Transparency = options.box3dColor[2]
+			end
+			-- Set positions only once 
+			local line1, line2, line3 = face[1], face[2], face[3]
+			line1.From, line1.To = corners.corners[i], corners.corners[i == 4 and 1 or i + 1]
+			line2.From, line2.To = corners.corners[i == 4 and 1 or i + 1], corners.corners[i == 4 and 5 or i + 5]
+			line3.From, line3.To = corners.corners[i == 4 and 5 or i + 5], corners.corners[i == 4 and 8 or i + 4]
+		end
+	else
+		for _, face in ipairs(box3d) do
+			for _, line in ipairs(face) do
+				line.Visible = false
+			end
+		end
+	end
+end
 
 -- instance class
 local InstanceObject = {};
