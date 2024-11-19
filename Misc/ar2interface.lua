@@ -324,7 +324,7 @@ do
                             AutoButtonColor = false,
                             ZIndex = 14
                           })
-                          self.check = self.window:add_object("ImageLabel", {
+                          --[[ self.check = self.window:add_object("ImageLabel", {
                             Name = generate_guid(),
                             BackgroundColor3 = Color3.fromRGB(20, 20, 20),
                             BackgroundTransparency = 1,
@@ -336,7 +336,7 @@ do
                             Visible = self.window.flags[flag],
                             Parent = button,
                             ZIndex = 15
-                          })
+                          }) -]]
                           mouse_button_click = function()
                             self.window.flags[flag] = not self.window.flags[flag]
                             self.check.Visible = self.window.flags[flag]
@@ -564,7 +564,7 @@ do
                             TextColor3 = Color3.fromRGB(255, 255, 255),
                             ZIndex = 14
                           })
-                          self.arrow = self.window:add_object("ImageLabel", {
+                         --[[ self.arrow = self.window:add_object("ImageLabel", {
                             Name = generate_guid(),
                             BackgroundColor3 = Color3.fromRGB(20, 20, 20),
                             BackgroundTransparency = 1,
@@ -576,7 +576,7 @@ do
                             Parent = self.button,
                             Rotation = -90,
                             ZIndex = 15
-                          })
+                          }) --]]
                           mouse_button_click = function()
                             self.window.drop_container.Visible = not self.window.drop_container.Visible
                             self.window.drop_container.Position = UDim2.new(0, self.button.AbsolutePosition.X, 0, self.button.AbsolutePosition.Y + self.button.AbsoluteSize.Y)
@@ -1501,7 +1501,7 @@ do
                 VerticalAlignment = Enum.VerticalAlignment.Top,
                 Parent = self.parent.tab_groups[current_tab_index]
               })
-              self.left_group = self.parent:add_object("ScrollingFrame", {
+             --[[ self.left_group = self.parent:add_object("ScrollingFrame", {
                 Name = generate_guid(),
                 BackgroundColor3 = Color3.fromRGB(12, 12, 12),
                 BorderSizePixel = 0,
@@ -1519,8 +1519,8 @@ do
                 TopImage = "rbxassetid://0",
                 VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar,
                 ZIndex = 10
-              })
-              self.right_group = self.parent:add_object("ScrollingFrame", {
+              })--]]
+            --[[ self.right_group = self.parent:add_object("ScrollingFrame", {
                 Name = generate_guid(),
                 BackgroundColor3 = Color3.fromRGB(12, 12, 12),
                 BorderSizePixel = 0,
@@ -1538,7 +1538,7 @@ do
                 TopImage = "rbxassetid://0",
                 VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar,
                 ZIndex = 10
-              })
+              }) -]]
               self.left_group_objects = {
                 self.parent:add_object("UIListLayout", {
                   Name = generate_guid(),
@@ -1742,7 +1742,7 @@ do
           AutoButtonColor = false,
           ZIndex = 9999
         })
-        self:add_object("ImageLabel", {
+        --[[ self:add_object("ImageLabel", {
           Name = generate_guid(),
           BackgroundTransparency = 1,
           Image = getsynasset(assets.colorpicker),
@@ -1752,7 +1752,8 @@ do
           Parent = self.colorpicker,
           Visible = true,
           ZIndex = 9999
-        })
+        })--]]
+
         self.location = self:add_object("Frame", {
           Name = generate_guid(),
           BackgroundTransparency = 1,
@@ -1767,7 +1768,7 @@ do
         self:add_object("ImageLabel", {
           Name = generate_guid(),
           BackgroundTransparency = 1,
-          Image = getsynasset(assets.colorpicker_location),
+         -- Image = getsynasset(assets.colorpicker_location),
           BorderSizePixel = 0,
           Size = UDim2.new(1, 0, 1, 0),
           Position = UDim2.new(0, 0, 0, 0),
@@ -1794,7 +1795,7 @@ do
           AutomaticCanvasSize = Enum.AutomaticSize.Y,
           TopImage = "rbxassetid://0",
           BottomImage = "rbxassetid://0",
-          MidImage = getsynasset(assets.square),
+         -- MidImage = getsynasset(assets.square),
           VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar
         })
         self:add_object("UIPadding", {
@@ -1854,7 +1855,7 @@ do
         self.hue_slider_location = self:add_object("ImageLabel", {
           Name = generate_guid(),
           BackgroundTransparency = 1,
-          Image = getsynasset(assets.slider_location),
+          --Image = getsynasset(assets.slider_location),
           BorderSizePixel = 0,
           Size = UDim2.new(0, 15, 0, 5),
           Position = UDim2.new(0, 0, 0, 0),
@@ -1885,7 +1886,7 @@ do
           Rotation = 90,
           Parent = self.opacity_slider
         })
-        local transparent_pattern = self:add_object("ImageLabel", {
+       --[[ local transparent_pattern = self:add_object("ImageLabel", {
           Name = generate_guid(),
           BackgroundTransparency = 1,
           Image = getsynasset(assets.transparent_pattern),
@@ -1897,8 +1898,8 @@ do
           ScaleType = Enum.ScaleType.Tile,
           TileSize = UDim2.new(0, 15, 0, 18),
           ZIndex = 9999
-        })
-        self.opacity_slider_location = self:add_object("ImageLabel", {
+        }) --]]
+       --[[ self.opacity_slider_location = self:add_object("ImageLabel", {
           Name = generate_guid(),
           BackgroundTransparency = 1,
           Image = getsynasset(assets.slider_location),
@@ -1909,7 +1910,7 @@ do
           ImageColor3 = Color3.fromRGB(255, 255, 255),
           Visible = true,
           ZIndex = 10000
-        })
+        }) --]]
         local mouse_button_down
         mouse_button_down = function()
           self.colorpicker_down = true
