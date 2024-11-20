@@ -5,7 +5,7 @@ local RunService = game:GetService("RunService")
 local UIS = game:GetService("UserInputService")
 
 -- // radar
-_G.rVis = false
+_G.rVis = true
 local rRadius = 50
 local mRadius = math.min(workspace.CurrentCamera.ViewportSize.X, workspace.CurrentCamera.ViewportSize.Y) / 6
 local screenSize = workspace.CurrentCamera.ViewportSize
