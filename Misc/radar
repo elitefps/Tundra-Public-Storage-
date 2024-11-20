@@ -1,12 +1,12 @@
--- // roblox
+-- // Services
 local Players = game:GetService("Players")
 local localPlayer = Players.LocalPlayer
 local RunService = game:GetService("RunService")
 local UIS = game:GetService("UserInputService")
 
--- // radar
-_G.rVis = false
-local rRadius = 50
+
+_G.rVis = false 
+local rRadius = 50 
 local mRadius = math.min(workspace.CurrentCamera.ViewportSize.X, workspace.CurrentCamera.ViewportSize.Y) / 6
 local screenSize = workspace.CurrentCamera.ViewportSize
 
@@ -23,22 +23,20 @@ local cfg = {
     gradientMin = Color3.new(0, 1, 0),
 }
 
--- // elements
+-- // elements.
 local radarCircle = Drawing.new("Circle")
-radarCircle.Position = rPos
 radarCircle.Radius = mRadius
 radarCircle.Color = cfg.radarColor
 radarCircle.Thickness = 3
 radarCircle.Transparency = 0.8
 radarCircle.Filled = true
-radarCircle.Visible = _G.rVis 
+radarCircle.Visible = _G.rVis
 
 local radarStroke = Drawing.new("Circle")
-radarStroke.Position = rPos
 radarStroke.Radius = mRadius + 4
 radarStroke.Color = cfg.strokeColor
 radarStroke.Thickness = 0.5
-radarStroke.Transparency = 0.8
+radarStroke.Transparency = 0.1
 radarStroke.Filled = false
 radarStroke.Visible = _G.rVis
 
@@ -48,7 +46,7 @@ localPlayerDot.Transparency = 1
 localPlayerDot.Filled = true
 localPlayerDot.Thickness = 1
 localPlayerDot.Radius = 6
-localPlayerDot.Visible = _G.rVis 
+localPlayerDot.Visible = _G.rVis
 
 local localPlayerName = Drawing.new("Text")
 localPlayerName.Text = localPlayer.Name
@@ -57,12 +55,12 @@ localPlayerName.Center = true
 localPlayerName.Outline = true
 localPlayerName.Color = Color3.new(1, 1, 1)
 localPlayerName.Font = Drawing.Fonts.UI
-localPlayerName.Visible = _G.rVis 
+localPlayerName.Visible = _G.rVis
 
--- // cache
+-- // caching
 local playerDots = {}
 
--- // helper functions
+-- // Helper Functions
 local function createDot()
     local dot = Drawing.new("Circle")
     dot.Color = cfg.dotDefaultColor
@@ -80,8 +78,29 @@ local function removeDot(player)
     end
 end
 
--- // update dot
+local function sRV(isVisible)
+    radarCircle.Visible = isVisible
+    radarStroke.Visible = isVisible
+    localPlayerDot.Visible = isVisible
+    localPlayerName.Visible = isVisible
+    for _, dot in pairs(playerDots) do
+        dot.Visible = isVisible
+    end
+end
+
+local function updateRadarPos()
+    radarCircle.Position = rPos
+    radarStroke.Position = rPos
+    localPlayerDot.Position = rPos
+    localPlayerName.Position = rPos + Vector2.new(0, -15)
+end
+
 local function updateDot(player, localPosition)
+    if not _G.rVis then
+        removeDot(player)
+        return
+    end
+
     local character = player.Character
     if not character or not character:FindFirstChild("HumanoidRootPart") then return end
 
@@ -97,20 +116,26 @@ local function updateDot(player, localPosition)
         playerDots[player] = dot
         dot.Position = screenPosition
         dot.Color = cfg.gradientMax:Lerp(cfg.gradientMin, distance / rRadius)
-        dot.Visible = _G.rVis 
+        dot.Visible = true
     else
         removeDot(player)
     end
 end
 
+-- // Update Radar
 local function updateRadar()
-    if not _G.rVis then return end 
+    if not _G.rVis then
+        sRV(false)
+        return
+    end
+
+    sRV(true)
+
     if not localPlayer.Character or not localPlayer.Character:FindFirstChild("HumanoidRootPart") then return end
 
     local localPosition = localPlayer.Character.HumanoidRootPart.Position
 
-    localPlayerDot.Position = rPos
-    localPlayerName.Position = localPlayerDot.Position + Vector2.new(0, -15)
+    updateRadarPos()
 
     for _, player in pairs(Players:GetPlayers()) do
         if player ~= localPlayer then
@@ -125,7 +150,7 @@ local function updateRadar()
     end
 end
 
--- // isDragging?
+-- // IsDragging?
 UIS.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 then
         local mousePosition = UIS:GetMouseLocation()
@@ -143,10 +168,7 @@ UIS.InputChanged:Connect(function(input)
             math.clamp(rPos.X, mRadius + 10, screenSize.X - mRadius - 10),
             math.clamp(rPos.Y, mRadius + 10, screenSize.Y - mRadius - 10)
         )
-        radarCircle.Position = rPos
-        radarStroke.Position = rPos
-        localPlayerDot.Position = rPos
-        localPlayerName.Position = rPos + Vector2.new(0, -15)
+        updateRadarPos()
     end
 end)
 
@@ -156,4 +178,5 @@ UIS.InputEnded:Connect(function(input)
     end
 end)
 
+-- // Render Loop
 RunService.RenderStepped:Connect(updateRadar)
