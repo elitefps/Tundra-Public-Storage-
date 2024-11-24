@@ -1,0 +1,166 @@
+-- GTL
+-- Version: 3.2
+
+-- Instances:
+
+local hi = Instance.new("Frame")
+local brand = Instance.new("TextLabel")
+local game = Instance.new("Frame")
+local UICorner = Instance.new("UICorner")
+local snapline = Instance.new("Frame")
+local UICorner_2 = Instance.new("UICorner")
+local gimma = Instance.new("TextLabel")
+local UICorner_3 = Instance.new("UICorner")
+local snapline_2 = Instance.new("Frame")
+local UICorner_4 = Instance.new("UICorner")
+
+--Properties:
+
+hi.Name = "hi"
+hi.Parent = game.StarterGui.wtrmrk
+hi.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+hi.BorderColor3 = Color3.fromRGB(0, 0, 0)
+hi.BorderSizePixel = 0
+hi.Position = UDim2.new(0.00858085789, 0, 0.0136815924, 0)
+hi.Size = UDim2.new(0, 261, 0, 28)
+
+brand.Name = "brand"
+brand.Parent = hi
+brand.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+brand.BackgroundTransparency = 1.000
+brand.BorderColor3 = Color3.fromRGB(0, 0, 0)
+brand.BorderSizePixel = 0
+brand.Position = UDim2.new(-0.0755174458, 0, -0.129032269, 0)
+brand.Size = UDim2.new(0, 299, 0, 35)
+brand.Font = Enum.Font.Code
+brand.Text = "tundra.wtf / build 2.6 | FPS 240 | MS 0."
+brand.TextColor3 = Color3.fromRGB(255, 255, 255)
+brand.TextSize = 11.000
+brand.TextStrokeColor3 = Color3.fromRGB(89, 89, 89)
+brand.TextStrokeTransparency = 0.400
+brand.TextWrapped = true
+
+game.Name = "game"
+game.Parent = hi
+game.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+game.BorderColor3 = Color3.fromRGB(0, 0, 0)
+game.BorderSizePixel = 0
+game.Position = UDim2.new(0, 0, 1.10714281, 0)
+game.Size = UDim2.new(0, 87, 0, 17)
+
+UICorner.CornerRadius = UDim.new(0, 3)
+UICorner.Parent = game
+
+snapline.Name = "snapline"
+snapline.Parent = game
+snapline.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+snapline.BorderColor3 = Color3.fromRGB(0, 0, 0)
+snapline.BorderSizePixel = 0
+snapline.Size = UDim2.new(0, 2, 0, 17)
+
+UICorner_2.Parent = snapline
+
+gimma.Name = "gimma"
+gimma.Parent = game
+gimma.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+gimma.BackgroundTransparency = 1.000
+gimma.BorderColor3 = Color3.fromRGB(0, 0, 0)
+gimma.BorderSizePixel = 0
+gimma.Position = UDim2.new(-1.46205258, 0, -0.540796638, 0)
+gimma.Size = UDim2.new(0, 334, 0, 35)
+gimma.Font = Enum.Font.Code
+gimma.Text = "Universal"
+gimma.TextColor3 = Color3.fromRGB(255, 255, 255)
+gimma.TextSize = 11.000
+gimma.TextStrokeColor3 = Color3.fromRGB(89, 89, 89)
+gimma.TextStrokeTransparency = 0.400
+gimma.TextWrapped = true
+
+UICorner_3.CornerRadius = UDim.new(0, 3)
+UICorner_3.Parent = hi
+
+snapline_2.Name = "snapline"
+snapline_2.Parent = hi
+snapline_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+snapline_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
+snapline_2.BorderSizePixel = 0
+snapline_2.Size = UDim2.new(0, 2, 0, 28)
+
+UICorner_4.Parent = snapline_2
+
+-- Scripts:
+
+local function RWKUH_fake_script() -- brand.client 
+	local script = Instance.new('LocalScript', brand)
+
+	local player = game.Players.LocalPlayer
+	local runService = game:GetService("RunService")
+	
+	-- CONSTANTS
+	local DOMAIN = "tundra.wtf"
+	local BUILD_VERSION = "3.0"
+	
+	if script.Parent:IsA("TextLabel") or script.Parent:IsA("TextButton") or script.Parent:IsA("TextBox") then
+		local text = script.Parent
+	
+		--[[ 
+		// text properties
+		text.AnchorPoint = Vector2.new(0.5, 0.5)
+	    text.Position = UDim2.new(-0.11, 0, -0.129, 0)
+		text.Size = UDim2.new(0.3, 0, 0.05, 0) 
+		text.TextScaled = true
+		text.TextColor3 = Color3.new(1, 1, 1) 
+		text.BackgroundTransparency = 1 
+		--]]
+	
+		local lastTime = tick()
+		local frameCount = 0
+		local fps = 0
+	
+		runService.RenderStepped:Connect(function()
+			frameCount = frameCount + 1
+			local currentTime = tick()
+			if currentTime - lastTime >= 1 then
+				fps = frameCount
+				frameCount = 0
+				lastTime = currentTime
+			end
+	
+			local success, ping = pcall(function()
+				return math.floor(player:GetNetworkPing() * 1000) 
+			end)
+	
+			if not success then
+				ping = "N/A" or "?" 
+			end
+	
+			
+			--[[if fps < 100 then
+				text.Position = UDim2.new(-0.076, -0.129, 0)
+			else  
+				text.Position = UDim2.new(-0.076, 0, -0.129, 0)	
+			end--]]
+	
+			--[[
+			if fps == 60 or fps == 240 then
+				local gimma = script.Parent:FindFirstChild("game") and script.Parent.game:FindFirstChild("gimma")
+				if gimma and gimma:IsA("GuiObject") then
+					gimma.Position = UDim2.new(-1.462, 0, -0.541, 0)
+				end
+			end
+	--]]
+			-- Update text
+			text.Text = string.format(
+				"%s / build %s | FPS %d | MS %d",
+				DOMAIN,
+				BUILD_VERSION,
+				fps,
+				ping
+			)
+		end)
+	else
+		return;
+	end
+	
+end
+coroutine.wrap(RWKUH_fake_script)()
